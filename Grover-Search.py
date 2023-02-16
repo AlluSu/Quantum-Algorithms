@@ -11,12 +11,21 @@ This program simulates the above scenario on a smaller scale.
 '''
 
 import random
+from os import getenv
+from dotenv import load_dotenv
 import math
 import matplotlib.pyplot as plt
+from qiskit import transpile, assemble, IBMQ
 from qiskit.quantum_info import Statevector
 from qiskit.algorithms import AmplificationProblem, Grover
 from qiskit_ibm_runtime import QiskitRuntimeService, Sampler, Session
 from qiskit.tools.visualization import plot_histogram
+from qiskit.tools.monitor import job_monitor
+from qiskit.providers.ibmq import least_busy
+
+load_dotenv()
+
+TOKEN = getenv('IBM_QUANTUM_TOKEN')
 
 # STEP 1: Construct and define the unstructured search problem.
 
@@ -54,16 +63,37 @@ plt.show()
 
 
 # STEP 3: Submit the circuits to IBM Quantum Computer via cloud
-service = QiskitRuntimeService()
-backend = "ibmq_qasm_simulator"
+user_option = int(input("Press 1 for simulator and 2 for real hardware: "))
 
-with Session(service=service, backend=backend):
-    sampler = Sampler()
-    job = sampler.run(circuits=grover_circuits, shots=1000)
-    result = job.result() 
-    print('===================================== RESULTS =====================================')
-    print(f"{result.quasi_dists}")
-    print(f"{result.metadata}")
+if user_option == 1:    
+    service = QiskitRuntimeService()
+    backend_simulator = "ibmq_qasm_simulator"
+    with Session(service=service, backend=backend_simulator):
+        sampler = Sampler()
+        job = sampler.run(circuits=grover_circuits, shots=1000)
+        job_monitor(job)
+        result = job.result() 
+        print('===================================== RESULTS =====================================')
+        print(f"{result.quasi_dists}")
+        print(f"{result.metadata}")
+
+else if user_option == 2:
+    IBMQ.save_account(TOKEN, overwrite=True)
+    provider = IBMQ.load_account()
+    provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+    backend_real_device = provider.get_backend('ibm_oslo') # for lower latency
+    print(f"The used backend is: {backend_real_device}")
+    mapped_circuit = transpile(grover_circuits, backend=backend_real_device)
+    quantum_object = assemble(mapped_circuit, backend=backend_real_device, shots=1000)
+    job = backend_real_device.run(quantum_object)
+    job_monitor(job)
+    later_result = provider.get_backend('ibm-oslo').retrieve_job(job.job_id())
+    result = job.result()
+    print(result)
+
+else:
+    print("Closing program!")
+    exit()
 
 # STEP 4: Analysis of the results
 
