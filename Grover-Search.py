@@ -11,6 +11,7 @@ This program simulates the above scenario on a smaller scale.
 '''
 
 import random
+import math
 import matplotlib.pyplot as plt
 from qiskit.quantum_info import Statevector
 from qiskit.algorithms import AmplificationProblem, Grover
@@ -19,7 +20,7 @@ from qiskit.tools.visualization import plot_histogram
 
 # STEP 1: Construct and define the unstructured search problem.
 
-random_name = random.randint(0,7) # This simulates a random person from a phone book containing 8 entries [0,..,7]
+random_name = random.randint(0,7) # This simulates a random person from a phone book containing 8 entries [0,..,7]. As 8 = 2³, we need 3 qubits.
 random_name_formatted = format(random_name, '03b') # This formats the random person's name to a 3-bit string
 oracle = Statevector.from_label(random_name_formatted) # Oracle, which is a black-box quantum circuit telling if your guess is right or wrong. We will let the oracle know the owner.
 
@@ -28,25 +29,29 @@ unstructured_search = AmplificationProblem(oracle, is_good_state=random_name_for
 # STEP 2: Constructing the adequate quantum circuit for the problem
 
 grover_circuits = []
-# We will make 2 Grover's circuits, with one having 1 iteration and the other having 2. Grover's algorithms accuracy to finding the right solution increases with the amount of iterations.
-for iteration in range(1,3):
-    grover = Grover(iterations=iteration)
+
+# Grover's algorithm's accuracy to find the right solution increases with the amount of iterations.
+# The optimal is approximately 2.22, and if the factor is larger than 4.44 it is the worst we can get
+# We have to round to integers due to implementation reasons, so best amount of iterations is 2, the worst is 4 and over.
+
+values = [1, 2, 3, 4, 5]
+
+for value in range(0, len(values)):
+    grover = Grover(iterations=values[value]) # using Grover's algorithm straight from the Qiskit library
     quantum_circuit = grover.construct_circuit(unstructured_search)
     quantum_circuit.measure_all()
     grover_circuits.append(quantum_circuit)
 
-#plt.ion()
-#plt.show()
-
 # First circuit with 1 iteration
 figure_1 = grover_circuits[0].draw(output='mpl')
-plt.show()
-#plt.pause(0.001)
 
-# Second circuit with 2 iterations
+# Second circuit with 2 iterations. The most optimal, rounded to nearest integer from the value pi/4*math.sqrt(2^3) = 2.2
 figure_2 = grover_circuits[1].draw(output='mpl')
+
+# Third circuit with the worst coefficient pi/2*math.sqrt(2^3) = 4.4. Should be way worse than the other circuits.
+figure_4 = grover_circuits[3].draw(output = 'mpl')
 plt.show()
-#plt.pause(0.001)
+
 
 # STEP 3: Submit the circuits to IBM Quantum Computer via cloud
 service = QiskitRuntimeService()
@@ -61,11 +66,15 @@ with Session(service=service, backend=backend):
     print(f"{result.metadata}")
 
 # STEP 4: Analysis of the results
-results_dictionary = result.quasi_dists[1].binary_probabilities()
-answer = max(results_dictionary, key=results_dictionary.get)
-figure_3 = plot_histogram(result.quasi_dists, legend=['1 iteration', '2 iterations'])
-plt.show()
 
-print(f"Quantum computer returned: {answer}")
-print(f"Correct answer: {random_name_formatted}")
-print('Correct!' if answer == random_name_formatted else 'Failure!')
+for distribution in range(0, len(result.quasi_dists)):
+    results_dictionary = result.quasi_dists[distribution].binary_probabilities()
+    answer = max(results_dictionary, key=results_dictionary.get)
+    print(f"With {distribution + 1} iterations the following probabilities were returned: \n {result.quasi_dists[distribution]}")
+    print(f"Maximum probability was for the value {answer}")
+    print(f"Correct answer: {random_name_formatted}")
+    print('Correct!' if answer == random_name_formatted else 'Failure!')
+    print('\n')
+
+histogram = plot_histogram(result.quasi_dists, legend=['1 iteration', '2 iterations', '3 iterations', '4 iterations', '5 iterations'])
+plt.show()
