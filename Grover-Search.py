@@ -25,6 +25,7 @@ from qiskit.tools.visualization import plot_histogram
 load_dotenv()
 
 TOKEN = getenv('IBM_QUANTUM_TOKEN')
+USED_BACKEND = 'ibm_oslo'
 
 # Function used for printing quantum circuits as matplotlib images
 def print_quantum_circuits(circuits):
@@ -33,84 +34,95 @@ def print_quantum_circuits(circuits):
         circuit.draw(output = 'mpl')
     plt.show()
 
-# STEP 1: Construct and define the unstructured search problem.
+def run_grover():
+    # STEP 1: Construct and define the unstructured search problem.
 
-random_name = random.randint(0,7) # This simulates a random person from a phone book containing 8 entries [0,..,7]. As 8 = 2³, we need 3 qubits.
-random_name_formatted = format(random_name, '03b') # This formats the random person's name to a 3-bit string
-oracle = Statevector.from_label(random_name_formatted) # Oracle, which is a black-box quantum circuit telling if your guess is right or wrong. We will let the oracle know the owner.
+    random_name = random.randint(0,7) # This simulates a random person from a phone book containing 8 entries [0,..,7]. As 8 = 2³, we need 3 qubits.
+    random_name_formatted = format(random_name, '03b') # This formats the random person's name to a 3-bit string
+    oracle = Statevector.from_label(random_name_formatted) # Oracle, which is a black-box quantum circuit telling if your guess is right or wrong. We will let the oracle know the owner.
 
-unstructured_search = AmplificationProblem(oracle, is_good_state=random_name_formatted) # Grover's algorithm uses a technique for modifying quantum states to raise the probability amplitude of the wanted value
+    unstructured_search = AmplificationProblem(oracle, is_good_state=random_name_formatted) # Grover's algorithm uses a technique for modifying quantum states to raise the probability amplitude of the wanted value
 
-# STEP 2: Constructing the adequate quantum circuit for the problem
+    # STEP 2: Constructing the adequate quantum circuit for the problem
 
-grover_circuits = []
+    grover_circuits = []
 
-# Grover's algorithm's accuracy to find the right solution increases with the amount of iterations.
-# The optimal is approximately 2.22, and if the factor is larger than 4.44 it is the worst we can get
-# We have to round to integers due to implementation reasons, so best amount of iterations is 2, the worst is 4 and over.
+    # Grover's algorithm's accuracy to find the right solution increases with the amount of iterations.
+    # The optimal is approximately 2.22, and if the factor is larger than 4.44 it is the worst we can get
+    # We have to round to integers due to implementation reasons, so best amount of iterations is 2, the worst is 4 and over.
 
-values = [0, 1, 2, 3, 4, 5, 6, 7]
-for value in range(0, len(values)):
-    grover = Grover(iterations=values[value]) # using Grover's algorithm straight from the Qiskit library
-    quantum_circuit = grover.construct_circuit(unstructured_search)
-    quantum_circuit.measure_all()
-    grover_circuits.append(quantum_circuit)
+    values = [0, 1, 2, 3, 4, 5, 6, 7]
+    for value in range(0, len(values)):
+        grover = Grover(iterations=values[value]) # using Grover's algorithm straight from the Qiskit library
+        quantum_circuit = grover.construct_circuit(unstructured_search)
+        quantum_circuit.measure_all()
+        grover_circuits.append(quantum_circuit)
 
-# print_quantum_circuits(grover_circuits)
+    # print_quantum_circuits(grover_circuits)
 
-# STEP 3: Submit the circuits to IBM Quantum Computer or run with a simulator
-# NOTE: The simulator is significantly faster than the real computer
-user_option = int(input("Press 1 for simulator and 2 for real hardware: "))
+    # STEP 3: Submit the circuits to IBM Quantum Computer or run with a simulator
+    # NOTE: The simulator is significantly faster than the real computer
+    try:
+        user_option = int(input("Press 1 for simulator and 2 for real hardware: "))
+    except ValueError:
+        raise ValueError('Please give an integer')    
 
-if user_option == 1:    
-    service = QiskitRuntimeService()
-    backend_simulator = "ibmq_qasm_simulator"
-    with Session(service=service, backend=backend_simulator):
-        sampler = Sampler()
-        job = sampler.run(circuits=grover_circuits, shots=1000)
-        #job_monitor(job)
-        result = job.result() 
-        print('===================================== RESULTS =====================================')
-        print(f"{result.quasi_dists}")
-        print(f"{result.metadata}")
-        qubits = 3
-        optimal_amount = Grover.optimal_num_iterations(1, qubits)
-        print(f"The optimal amount of Grover iterations is: {optimal_amount} with {qubits} qubits")
+    if user_option == 1:    
+        service = QiskitRuntimeService()
+        backend_simulator = "ibmq_qasm_simulator"
+        with Session(service=service, backend=backend_simulator):
+            sampler = Sampler()
+            job = sampler.run(circuits=grover_circuits, shots=1000)
+            #job_monitor(job)
+            result = job.result() 
+            print('===================================== RESULTS =====================================')
+            print(f"{result.quasi_dists}")
+            print(f"{result.metadata}")
+            qubits = 3
+            optimal_amount = Grover.optimal_num_iterations(1, qubits)
+            print(f"The optimal amount of Grover iterations is: {optimal_amount} with {qubits} qubits")
 
-        # STEP 4: Analysis of the results gotten from the simulator
-        # Counting probabilities and doing plotting & visualization with matplotlib
+            # STEP 4: Analysis of the results gotten from the simulator
+            # Counting probabilities and doing plotting & visualization with matplotlib
 
-        for distribution in range(0, len(result.quasi_dists)):
-            results_dictionary = result.quasi_dists[distribution].binary_probabilities()
-            answer = max(results_dictionary, key=results_dictionary.get)
-            print(f"With {distribution + 1} iterations the following probabilities were returned: \n {result.quasi_dists[distribution]}")
-            print(f"Maximum probability was for the value {answer}")
-            print(f"Correct answer: {random_name_formatted}")
-            print('Correct!' if answer == random_name_formatted else 'Failure!')
-            print('\n')
-        histogram = plot_histogram(result.quasi_dists, legend=['1 iteration', '2 iterations', '3 iterations', '4 iterations', '5 iterations', '6 iterations', '7 iterations', '8 iterations'])
-        plt.xlabel("Which entry in the data [0,..,7]")
-        plt.show()
+            for distribution in range(0, len(result.quasi_dists)):
+                results_dictionary = result.quasi_dists[distribution].binary_probabilities()
+                answer = max(results_dictionary, key=results_dictionary.get)
+                print(f"With {distribution + 1} iterations the following probabilities were returned: \n {result.quasi_dists[distribution]}")
+                print(f"Maximum probability was for the value {answer}")
+                print(f"Correct answer: {random_name_formatted}")
+                print('Correct!' if answer == random_name_formatted else 'Failure!')
+                print('\n')
+            histogram = plot_histogram(result.quasi_dists, legend=['1 iteration', '2 iterations', '3 iterations', '4 iterations', '5 iterations', '6 iterations', '7 iterations', '8 iterations'])
+            plt.xlabel("Which entry in the data [0,..,7]")
+            plt.show()
 
-elif user_option == 2:
-    IBMQ.save_account(TOKEN, overwrite=True)
-    provider = IBMQ.load_account()
-    provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
-    backend_real_device = provider.get_backend('ibm_oslo') # for lower latency choose geographically closest one
-    print(f"The used backend is: {backend_real_device}")
-    mapped_circuit = transpile(grover_circuits, backend=backend_real_device)
-    quantum_object = assemble(mapped_circuit, backend=backend_real_device, shots=1000)
-    job = backend_real_device.run(quantum_object)
-    job_monitor(job)
-    later_result = provider.get_backend('ibm-oslo').retrieve_job(job.job_id())
-    print(later_result)
-    result = job.result()
-    print(result)
-    results = result.result
-    print(results)
+    elif user_option == 2:
+        IBMQ.save_account(TOKEN, overwrite=True)
+        provider = IBMQ.load_account()
+        provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+        backend_real_device = provider.get_backend(USED_BACKEND) # for lower latency choose the geographically closest one
+        print(f"The used backend is: {backend_real_device}")
+        mapped_circuit = transpile(grover_circuits, backend=backend_real_device)
+        quantum_object = assemble(mapped_circuit, backend=backend_real_device, shots=1000)
+        job = backend_real_device.run(quantum_object)
+        job_monitor(job)
+        job_id = job.job_id()
+        later_result = provider.get_backend(USED_BACKEND).retrieve_job(job.job_id())
+        print(later_result)
+        result = job.result()
+        print(result)
+        results = result.result()
+        print(results)
 
-    # TODO: STEP 4, ANALYSIS OF THE RESULTS FROM THE QUANTUM COMPUTER
+        # TODO: STEP 4, ANALYSIS OF THE RESULTS FROM THE QUANTUM COMPUTER
 
-else:
-    print("Closing program!")
-    exit()
+    else:
+        print("Closing program!")
+        exit()
+
+def main():
+    run_grover()
+
+if __name__ == "__main__":
+    main() 
