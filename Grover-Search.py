@@ -20,8 +20,7 @@ from qiskit.quantum_info import Statevector
 from qiskit.algorithms import AmplificationProblem, Grover
 from qiskit_ibm_runtime import QiskitRuntimeService, Sampler, Session
 from qiskit.tools.visualization import plot_histogram
-from qiskit.tools.monitor import job_monitor
-from qiskit.providers.ibmq import least_busy
+#from qiskit.tools.monitor import job_monitor
 
 load_dotenv()
 
@@ -43,26 +42,20 @@ grover_circuits = []
 # The optimal is approximately 2.22, and if the factor is larger than 4.44 it is the worst we can get
 # We have to round to integers due to implementation reasons, so best amount of iterations is 2, the worst is 4 and over.
 
-values = [1, 2, 3, 4, 5]
-
+values = [0, 1, 2, 3, 4, 5, 6, 7]
 for value in range(0, len(values)):
     grover = Grover(iterations=values[value]) # using Grover's algorithm straight from the Qiskit library
     quantum_circuit = grover.construct_circuit(unstructured_search)
     quantum_circuit.measure_all()
     grover_circuits.append(quantum_circuit)
 
-# First circuit with 1 iteration
-figure_1 = grover_circuits[0].draw(output='mpl')
-
-# Second circuit with 2 iterations. The most optimal, rounded to nearest integer from the value pi/4*math.sqrt(2^3) = 2.2
-figure_2 = grover_circuits[1].draw(output='mpl')
-
-# Third circuit with the worst coefficient pi/2*math.sqrt(2^3) = 4.4. Should be way worse than the other circuits.
-figure_4 = grover_circuits[3].draw(output = 'mpl')
+for fig in grover_circuits:
+    fig.draw(output = 'mpl') #Matplotlib output, freezes the program execution until windows are closed
 plt.show()
 
 
 # STEP 3: Submit the circuits to IBM Quantum Computer via cloud
+# NOTE: The simulator is significantly faster than the real computer
 user_option = int(input("Press 1 for simulator and 2 for real hardware: "))
 
 if user_option == 1:    
@@ -71,13 +64,29 @@ if user_option == 1:
     with Session(service=service, backend=backend_simulator):
         sampler = Sampler()
         job = sampler.run(circuits=grover_circuits, shots=1000)
-        job_monitor(job)
+        #job_monitor(job)
         result = job.result() 
         print('===================================== RESULTS =====================================')
         print(f"{result.quasi_dists}")
         print(f"{result.metadata}")
+        optimal_amount = Grover.optimal_num_iterations(1, 3)
+        print(optimal_amount)
 
-else if user_option == 2:
+        # STEP 4: Analysis of the results
+
+        for distribution in range(0, len(result.quasi_dists)):
+            results_dictionary = result.quasi_dists[distribution].binary_probabilities()
+            answer = max(results_dictionary, key=results_dictionary.get)
+            print(f"With {distribution + 1} iterations the following probabilities were returned: \n {result.quasi_dists[distribution]}")
+            print(f"Maximum probability was for the value {answer}")
+            print(f"Correct answer: {random_name_formatted}")
+            print('Correct!' if answer == random_name_formatted else 'Failure!')
+            print('\n')
+        histogram = plot_histogram(result.quasi_dists, legend=['1 iteration', '2 iterations', '3 iterations', '4 iterations', '5 iterations', '6 iterations', '7 iterations', '8 iterations'])
+        plt.xlabel("Which entry in the data [0,..,7]")
+        plt.show()
+
+elif user_option == 2:
     IBMQ.save_account(TOKEN, overwrite=True)
     provider = IBMQ.load_account()
     provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
@@ -86,25 +95,16 @@ else if user_option == 2:
     mapped_circuit = transpile(grover_circuits, backend=backend_real_device)
     quantum_object = assemble(mapped_circuit, backend=backend_real_device, shots=1000)
     job = backend_real_device.run(quantum_object)
-    job_monitor(job)
+    #job_monitor(job)
     later_result = provider.get_backend('ibm-oslo').retrieve_job(job.job_id())
+    print(later_result)
     result = job.result()
     print(result)
+    results = result.result
+    print(results)
+
+    # TODO: STEP 4, ANALYSIS OF RESULTS
 
 else:
     print("Closing program!")
     exit()
-
-# STEP 4: Analysis of the results
-
-for distribution in range(0, len(result.quasi_dists)):
-    results_dictionary = result.quasi_dists[distribution].binary_probabilities()
-    answer = max(results_dictionary, key=results_dictionary.get)
-    print(f"With {distribution + 1} iterations the following probabilities were returned: \n {result.quasi_dists[distribution]}")
-    print(f"Maximum probability was for the value {answer}")
-    print(f"Correct answer: {random_name_formatted}")
-    print('Correct!' if answer == random_name_formatted else 'Failure!')
-    print('\n')
-
-histogram = plot_histogram(result.quasi_dists, legend=['1 iteration', '2 iterations', '3 iterations', '4 iterations', '5 iterations'])
-plt.show()
