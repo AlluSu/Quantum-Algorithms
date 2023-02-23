@@ -26,6 +26,13 @@ load_dotenv()
 
 TOKEN = getenv('IBM_QUANTUM_TOKEN')
 
+# Function used for printing quantum circuits as matplotlib images
+def print_quantum_circuits(circuits):
+    #Matplotlib output, freezes the program execution until windows are closed
+    for circuit in circuits:
+        circuit.draw(output = 'mpl')
+    plt.show()
+
 # STEP 1: Construct and define the unstructured search problem.
 
 random_name = random.randint(0,7) # This simulates a random person from a phone book containing 8 entries [0,..,7]. As 8 = 2³, we need 3 qubits.
@@ -49,12 +56,9 @@ for value in range(0, len(values)):
     quantum_circuit.measure_all()
     grover_circuits.append(quantum_circuit)
 
-for fig in grover_circuits:
-    fig.draw(output = 'mpl') #Matplotlib output, freezes the program execution until windows are closed
-plt.show()
+# print_quantum_circuits(grover_circuits)
 
-
-# STEP 3: Submit the circuits to IBM Quantum Computer via cloud
+# STEP 3: Submit the circuits to IBM Quantum Computer or run with a simulator
 # NOTE: The simulator is significantly faster than the real computer
 user_option = int(input("Press 1 for simulator and 2 for real hardware: "))
 
@@ -69,10 +73,12 @@ if user_option == 1:
         print('===================================== RESULTS =====================================')
         print(f"{result.quasi_dists}")
         print(f"{result.metadata}")
-        optimal_amount = Grover.optimal_num_iterations(1, 3)
-        print(optimal_amount)
+        qubits = 3
+        optimal_amount = Grover.optimal_num_iterations(1, qubits)
+        print(f"The optimal amount of Grover iterations is: {optimal_amount} with {qubits} qubits")
 
-        # STEP 4: Analysis of the results
+        # STEP 4: Analysis of the results gotten from the simulator
+        # Counting probabilities and doing plotting & visualization with matplotlib
 
         for distribution in range(0, len(result.quasi_dists)):
             results_dictionary = result.quasi_dists[distribution].binary_probabilities()
@@ -90,12 +96,12 @@ elif user_option == 2:
     IBMQ.save_account(TOKEN, overwrite=True)
     provider = IBMQ.load_account()
     provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
-    backend_real_device = provider.get_backend('ibm_oslo') # for lower latency
+    backend_real_device = provider.get_backend('ibm_oslo') # for lower latency choose geographically closest one
     print(f"The used backend is: {backend_real_device}")
     mapped_circuit = transpile(grover_circuits, backend=backend_real_device)
     quantum_object = assemble(mapped_circuit, backend=backend_real_device, shots=1000)
     job = backend_real_device.run(quantum_object)
-    #job_monitor(job)
+    job_monitor(job)
     later_result = provider.get_backend('ibm-oslo').retrieve_job(job.job_id())
     print(later_result)
     result = job.result()
@@ -103,7 +109,7 @@ elif user_option == 2:
     results = result.result
     print(results)
 
-    # TODO: STEP 4, ANALYSIS OF RESULTS
+    # TODO: STEP 4, ANALYSIS OF THE RESULTS FROM THE QUANTUM COMPUTER
 
 else:
     print("Closing program!")
