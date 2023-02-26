@@ -20,7 +20,7 @@ from qiskit.quantum_info import Statevector
 from qiskit.algorithms import AmplificationProblem, Grover
 from qiskit_ibm_runtime import QiskitRuntimeService, Sampler, Session
 from qiskit.tools.visualization import plot_histogram
-#from qiskit.tools.monitor import job_monitor
+from qiskit.tools.monitor import job_monitor
 
 load_dotenv()
 
@@ -63,7 +63,7 @@ def run_grover():
     # STEP 3: Submit the circuits to IBM Quantum Computer or run with a simulator
     # NOTE: The simulator is significantly faster than the real computer
     try:
-        user_option = int(input("Press 1 for simulator and 2 for real hardware: "))
+        user_option = int(input("Press 1 for simulator | 2 for real hardware | 3 for retrieving an existing job by job_id: "))
     except ValueError:
         raise ValueError('Please give an integer')    
 
@@ -97,12 +97,15 @@ def run_grover():
             plt.xlabel("Which entry in the data [0,..,7]")
             plt.show()
 
+    # TODO: Contains some soon-to-be deprecated components. Migrate and refactor when time.
+
     elif user_option == 2:
         IBMQ.save_account(TOKEN, overwrite=True)
         provider = IBMQ.load_account()
         provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
         backend_real_device = provider.get_backend(USED_BACKEND) # for lower latency choose the geographically closest one
         print(f"The used backend is: {backend_real_device}")
+        print(f"The value, which we are looking for is: {random_name_formatted}")
         mapped_circuit = transpile(grover_circuits, backend=backend_real_device)
         quantum_object = assemble(mapped_circuit, backend=backend_real_device, shots=1000)
         job = backend_real_device.run(quantum_object)
@@ -112,10 +115,19 @@ def run_grover():
         print(later_result)
         result = job.result()
         print(result)
-        results = result.result()
-        print(results)
 
         # TODO: STEP 4, ANALYSIS OF THE RESULTS FROM THE QUANTUM COMPUTER
+    
+    # Due to long queues (45 minutes to 4 hours) in the free-tier quantum computer, it is easier to invesitgate and experiment by using previous runs.
+    elif user_option == 3:
+        IBMQ.save_account(TOKEN, overwrite=True)
+        provider = IBMQ.load_account()
+        provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+        backend_real_device = provider.get_backend(USED_BACKEND) # for lower latency choose the geographically closest one
+        print(f"The used backend is: {backend_real_device}")
+        job_id = '63f77f532fbfc49b23bb03f4' # hard coded
+        result = provider.get_backend(USED_BACKEND).retrieve_job(job_id)
+        print(f"as a dict: {result.result().to_dict()}")
 
     else:
         print("Closing program!")
@@ -125,4 +137,4 @@ def main():
     run_grover()
 
 if __name__ == "__main__":
-    main() 
+    main()
