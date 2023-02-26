@@ -13,7 +13,6 @@ This program simulates the above scenario on a smaller scale.
 import random
 from os import getenv
 from dotenv import load_dotenv
-import math
 import matplotlib.pyplot as plt
 from qiskit import transpile, assemble, IBMQ
 from qiskit.quantum_info import Statevector
@@ -26,21 +25,37 @@ load_dotenv()
 
 TOKEN = getenv('IBM_QUANTUM_TOKEN')
 USED_BACKEND = 'ibm_oslo'
-SEARCHED_VALUE = None
+FILE_TO_WRITE_NAME ='History.txt'
 
 # Function used for printing quantum circuits as matplotlib images
 def print_quantum_circuits(circuits):
+
     #Matplotlib output, freezes the program execution until windows are closed
     for circuit in circuits:
         circuit.draw(output = 'mpl')
     plt.show()
+
+# Function used for connecting to the IBM quantum computer
+# TODO: Remove deprecated compontents
+def connect_to_cloud(token, backend):
+    IBMQ.save_account(token, overwrite=True)
+    provider = IBMQ.load_account()
+    provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+    used_backend = provider.get_backend(backend) # for lower latency choosing the geographically closest one
+    print(f"The used backend is: {used_backend}")
+    return used_backend
+
+# Writing the randomized entry to see if the results are correct by the quantum computer. Results can be obtained from the IBM cloud with the job_id.
+def write_to_history(randomized_entry, job_id):
+    results_history = open(FILE_TO_WRITE_NAME, "a")
+    results_history.write("\n" + str(randomized_entry) + " " + str(job_id) + "\n")
+    results_history.close()
 
 def run_grover():
     # STEP 1: Construct and define the unstructured search problem.
 
     random_name = random.randint(0,7) # This simulates a random person from a phone book containing 8 entries [0,..,7]. As 8 = 2³, we need 3 qubits.
     random_name_formatted = format(random_name, '03b') # This formats the random person's name to a 3-bit string
-    SEARCHED_VALUE = random_name_formatted
     oracle = Statevector.from_label(random_name_formatted) # Oracle, which is a black-box quantum circuit telling if your guess is right or wrong. We will let the oracle know the owner.
 
     unstructured_search = AmplificationProblem(oracle, is_good_state=random_name_formatted) # Grover's algorithm uses a technique for modifying quantum states to raise the probability amplitude of the wanted value
@@ -60,10 +75,11 @@ def run_grover():
         quantum_circuit.measure_all()
         grover_circuits.append(quantum_circuit)
 
+    # Commented for now so the program does not freeze
     # print_quantum_circuits(grover_circuits)
 
     # STEP 3: Submit the circuits to IBM Quantum Computer or run with a simulator
-    # NOTE: The simulator is significantly faster than the real computer
+    # NOTE: Occasionally the simulator is significantly faster than the real computer due to queue
     try:
         user_option = int(input("Press 1 for simulator | 2 for real hardware | 3 for retrieving an existing job by job_id: "))
     except ValueError:
@@ -82,12 +98,10 @@ def run_grover():
             print(f"{result.metadata}")
             qubits = 3
             optimal_amount = Grover.optimal_num_iterations(1, qubits)
-            print(f"The optimal amount of Grover iterations is: {optimal_amount} with {qubits} qubits")
+            print(f"The optimal amount of Grover iterations is: {optimal_amount} with {qubits}  qubits")
 
-            # Write the results of the runs to a file
-            results_history = open("history.txt", "a")
-            results_history.write(str(random_name_formatted) + " " + str(job.job_id()))
-            results_history.close()
+            # Write the randomized entry and job id of the run to a file
+            write_to_history(random_name_formatted, job.job_id())
             
             # STEP 4: Analysis of the results gotten from the simulator
             # Counting probabilities and doing plotting & visualization with matplotlib
@@ -100,52 +114,41 @@ def run_grover():
                 print(f"Correct answer: {random_name_formatted}")
                 print('Correct!' if answer == random_name_formatted else 'Failure!')
                 print('\n')
+
             histogram = plot_histogram(result.quasi_dists, legend=['1 iteration', '2 iterations', '3 iterations', '4 iterations', '5 iterations', '6 iterations', '7 iterations', '8 iterations'])
             plt.xlabel("Which entry in the data [0,..,7]")
             plt.show()
 
-    # TODO: Contains some soon-to-be deprecated components. Migrate and refactor when time.
-
     elif user_option == 2:
-        IBMQ.save_account(TOKEN, overwrite=True)
-        provider = IBMQ.load_account()
-        provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
-        backend_real_device = provider.get_backend(USED_BACKEND) # for lower latency choose the geographically closest one
-        print(f"The used backend is: {backend_real_device}")
+        # Connect to IBM cloud and get the backend provider.
+        backend = connect_to_cloud(TOKEN, USED_BACKEND)
         print(f"The value, which we are looking for is: {random_name_formatted}")
-        mapped_circuit = transpile(grover_circuits, backend=backend_real_device)
-        quantum_object = assemble(mapped_circuit, backend=backend_real_device, shots=1000)
-        job = backend_real_device.run(quantum_object)
+        mapped_circuit = transpile(grover_circuits, backend=backend)
+        quantum_object = assemble(mapped_circuit, backend=backend, shots=1000)
+        job = backend.run(quantum_object)
         job_monitor(job)
         job_id = job.job_id()
-        later_result = provider.get_backend(USED_BACKEND).retrieve_job(job.job_id())
-        print(later_result)
         result = job.result()
         print(result)
-        
-        # Write the results of the runs to a file
-        results_history = open("history.txt", "a")
-        results_history.write(str(random_name_formatted) + " " + str(job_id))
-        results_history.close()
+
+        # Write the randomized entry and job id of the run to a file
+        write_to_history(random_name_formatted, job_id)
 
         # TODO: STEP 4, ANALYSIS OF THE RESULTS FROM THE QUANTUM COMPUTER
     
-    # Due to long queues (45 minutes to 4 hours) in the free-tier quantum computer, it is easier to invesitgate and experiment by using previous runs.
+    # Due to occasional queues (45 minutes to 4 hours) in the free-tier quantum computer, it is easier to investigate and experiment by using previous runs, which can be obtained with the job id.
     elif user_option == 3:
-        IBMQ.save_account(TOKEN, overwrite=True)
-        provider = IBMQ.load_account()
-        provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
-        backend_real_device = provider.get_backend(USED_BACKEND) # for lower latency choose the geographically closest one
-        print(f"The used backend is: {backend_real_device}")
-        job_id = '63f77f532fbfc49b23bb03f4' # hard coded
-        result = provider.get_backend(USED_BACKEND).retrieve_job(job_id)
+        job_id = input("Give job id: ")
+        backend = connect_to_cloud(TOKEN, USED_BACKEND)
+        result = backend.retrieve_job(job_id)
         print(f"as a dict: {result.result().to_dict()}")
         all_results_as_dict = result.result().to_dict()
         print(all_results_as_dict)
 
+        # TODO:
         # STEP 4: analysis and visualization of the results
-        hist = plot_histogram(data = all_results_data)
-        plt.show()
+        # hist = plot_histogram(data = all_results_data)
+        # plt.show()
 
     else:
         print("Closing program!")
