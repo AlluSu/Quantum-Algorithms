@@ -26,6 +26,7 @@ load_dotenv()
 
 TOKEN = getenv('IBM_QUANTUM_TOKEN')
 USED_BACKEND = 'ibm_oslo'
+SEARCHED_VALUE = None
 
 # Function used for printing quantum circuits as matplotlib images
 def print_quantum_circuits(circuits):
@@ -39,6 +40,7 @@ def run_grover():
 
     random_name = random.randint(0,7) # This simulates a random person from a phone book containing 8 entries [0,..,7]. As 8 = 2³, we need 3 qubits.
     random_name_formatted = format(random_name, '03b') # This formats the random person's name to a 3-bit string
+    SEARCHED_VALUE = random_name_formatted
     oracle = Statevector.from_label(random_name_formatted) # Oracle, which is a black-box quantum circuit telling if your guess is right or wrong. We will let the oracle know the owner.
 
     unstructured_search = AmplificationProblem(oracle, is_good_state=random_name_formatted) # Grover's algorithm uses a technique for modifying quantum states to raise the probability amplitude of the wanted value
@@ -73,7 +75,7 @@ def run_grover():
         with Session(service=service, backend=backend_simulator):
             sampler = Sampler()
             job = sampler.run(circuits=grover_circuits, shots=1000)
-            #job_monitor(job)
+            job_monitor(job)
             result = job.result() 
             print('===================================== RESULTS =====================================')
             print(f"{result.quasi_dists}")
@@ -82,6 +84,11 @@ def run_grover():
             optimal_amount = Grover.optimal_num_iterations(1, qubits)
             print(f"The optimal amount of Grover iterations is: {optimal_amount} with {qubits} qubits")
 
+            # Write the results of the runs to a file
+            results_history = open("history.txt", "a")
+            results_history.write(str(random_name_formatted) + " " + str(job.job_id()))
+            results_history.close()
+            
             # STEP 4: Analysis of the results gotten from the simulator
             # Counting probabilities and doing plotting & visualization with matplotlib
 
@@ -115,6 +122,11 @@ def run_grover():
         print(later_result)
         result = job.result()
         print(result)
+        
+        # Write the results of the runs to a file
+        results_history = open("history.txt", "a")
+        results_history.write(str(random_name_formatted) + " " + str(job_id))
+        results_history.close()
 
         # TODO: STEP 4, ANALYSIS OF THE RESULTS FROM THE QUANTUM COMPUTER
     
@@ -128,6 +140,12 @@ def run_grover():
         job_id = '63f77f532fbfc49b23bb03f4' # hard coded
         result = provider.get_backend(USED_BACKEND).retrieve_job(job_id)
         print(f"as a dict: {result.result().to_dict()}")
+        all_results_as_dict = result.result().to_dict()
+        print(all_results_as_dict)
+
+        # STEP 4: analysis and visualization of the results
+        hist = plot_histogram(data = all_results_data)
+        plt.show()
 
     else:
         print("Closing program!")
