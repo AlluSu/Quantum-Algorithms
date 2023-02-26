@@ -1,0 +1,14 @@
+{
+  "id": "63f77f532fbfc49b23bb03f4",
+  "userId": "63edd2a171c0ea063a7b13a6",
+  "status": "COMPLETED",
+  "creationDate": "2023-02-23T14:59:31.165Z",
+  "endDate": "2023-02-23T15:40:56.484Z",
+  "backend": {
+    "id": "62752cc029e3b710fc620be7",
+    "name": "ibm_oslo"
+  },
+  "tags": [
+    "real-computer"
+  ]
+}
