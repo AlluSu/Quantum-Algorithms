@@ -10,6 +10,7 @@ of lookups to only 1000.
 This program simulates the above scenario on a smaller scale.
 '''
 
+import json
 import random
 from os import getenv
 from dotenv import load_dotenv
@@ -98,8 +99,27 @@ def visualize_simulator_results(result, random_name_formatted):
     plt.xlabel("Which entry in the data [0,..,7]")
     plt.show()
 
+def visualize_existing_simulator_results():
+    with open('test-results/simulator/cfuq0n7b5be8coe26so0-result.json') as f:
+        measurements = json.load(f)
+        plot_histogram(measurements['quasi_dists'], legend=['1 iteration', '2 iterations', '3 iterations', '4 iterations', '5 iterations', '6 iterations', '7 iterations', '8 iterations'])
+        plt.show()
+
+def visualize_existing_qc_results():
+    with open('test-results/real/63fda07b6d831406fd4b6847-output.json') as f:
+        measurements = json.load(f)
+        measurements_results = measurements.get('results')
+        counts_list = []
+        for value in measurements_results:
+            counts_list.append(value.get('data').get("counts"))
+        plot_histogram(data=counts_list, legend=['1 iteration', '2 iterations', '3 iterations', '4 iterations', '5 iterations', '6 iterations', '7 iterations', '8 iterations'])    
+        plt.show()
+
 # The real program execution starts here.
 def run_grover():
+    
+    #visualize_existing_simulator_results
+    visualize_existing_qc_results()
 
     # STEP 1: Construct and define the unstructured search problem.
     random_name = random.randint(0,7) # This simulates a random person from a phone book containing 8 entries [0,..,7]. As 8 = 2³, we need 3 qubits.
@@ -130,11 +150,12 @@ def run_grover():
     except ValueError:
         raise ValueError('Please give an integer')    
 
+
     # Simulator
     if user_option == 1:
         
         # Result from Grover's algorithm
-        resul, job = run_grover_in_simulator(grover_circuits)    
+        result, job = run_grover_in_simulator(grover_circuits)    
         
         # Write the randomized entry and job id of the run to a file
         write_to_history(random_name_formatted, job)
