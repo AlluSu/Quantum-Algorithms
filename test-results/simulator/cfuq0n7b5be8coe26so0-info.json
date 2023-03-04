@@ -1,0 +1,114 @@
+{
+  "id": "cfuq0n7b5be8coe26so0",
+  "hub": "ibm-q",
+  "group": "open",
+  "project": "main",
+  "backend": "ibmq_qasm_simulator",
+  "state": {
+    "status": "Completed"
+  },
+  "params": {
+    "circuits": [
+      {
+        "__type__": "QuantumCircuit",
+        "__value__": "eJwL9Az29gxhZRBnZIAAxkIGvkwGDiCLGYpBgAWImaBsdvei/LLUIoXkzKLk0swSqChDXmlOTiEjWA8j0BBUADOdKRmigoUxNzWxGJciuAgrmgw68HBPLEktJE0pI/FKmRjYoULMOJQ6JRYVZaYWgZ0ANhxVGyMOW3yBni8tgrg8GSxCgg7GZLAaEnQwJYNdxQAApXwjNw=="
+      },
+      {
+        "__type__": "QuantumCircuit",
+        "__value__": "eJzNVU1Kw0AUfm+SYLoRd3ZpD9AzKCZQi7iIVgjuwpCWQGzN2Hi99hoewSNIN6aTmZiOmaQTFHwQmL58f/N4NMH04XY6c+AcoSzM4DQBtzhZ4tmXXTxEnN0JW73F7IImjObJWnRhmadphpyDhchhSXVCS4SNz3H0qgNVv3EhM4h3zovCgQDwO64su6aGgVlCvbm9bTCft5qfBVeD0W7mj4eG5q5q/oMDfhItVssoBbc9gyWBl+89ogDXthX9ej1690+TaB1zpUxGJXNJH4792W402FYNSexu8BM5SKP3brT93DSLYu2qbaKq3semJqWbiBy4MhFwxHud8U3lejwUj4dCJzTsAe0OEPa4FoET0WoY8n4bLM8LG7buN2f8f6bRHaDPPpAaSLfKgTpfgyh/ldo4c8sq8bqOGEtipqPp/ivuik9YzsqrUt4xYCDlGAMGoTwVfAGuHYA9"
+      },
+      {
+        "__value__": "eJzNVU1Og0AUfjNAhI1xZ5f2AD2DRkhqY1ygmBB3ZEIbEmxlLF6vvYZH8AimG+kwg3ScgQ7RxJeQDI/vj5cXCGcPt7PIgXMEdaECTjNwq5PFr33Z1YX52ZvS1VtKL0hGSZmteReWZZ4XiHFQJXJYQh2TGmGj5zR51YGae7QQGfgz50XiQAjoO64ou6WGQrOEenN7qzCfd5qfhVfeeBcFk5GhuSub/+BAkCWL1TLJwe3OYAng5fuAKMC0bUm/XY/+/dM0WadMqRBR8VzQR5Mg2o29bdMQxP4GO+GDNHpvpe3nRi2KWq/aJSrrfWxaUrqJiIFLEwGHP9cZ3zSux0PR8VDohcYDoP0B4gGvheGEtxRD3m+D5fuxYut+c8b/Zxr9AYbsA26BdKscyvM1iPJXqY0zGxM6do/VdUJpllIdTfdxuav+eSWtZ0NYx4CBCMMYMDBhqeALxP2B6Q==",
+        "__type__": "QuantumCircuit"
+      },
+      {
+        "__type__": "QuantumCircuit",
+        "__value__": "eJzNVU1Og0AUfjNApC6MO7u0B+gZNEJSG+MCxYS4m0xoQ4KtjMXrtdfwCB7BdCMdZpCODHSITXwJyfD4/nh5gWD6eDcNHbhAUBbK4CwBtzhZ4tqVXVxYnE8nbPkes0uaMJonK9GFRZ6mGeIcVIjsl1THtETY6CUmbzpQdY/mMoN45rwqHAgA/cSVZdfUUGCWUG9ubxrMZ63m58H1YLQN/fHQ0NxVzX9xwE/IfLkgKbjtGSwJvProEQW4tq3o1+vJe3iekFXMlTIZFc8kfTj2w+1osKkaktjd4Ce8l0bv3Wj7tW4WRbVXbRNV9T7XNSndROTAlYmAI57rjG8r18Oh6HAodEKjHtDuAFGP18JwIloNQ95tg+V5UcPW/eWM/880ugP02QdcA+lWOVDnaxDlWKmNMx+f0LKsvG4IY0nMdDTd1+i++EnmrBwm5R0DBqIcY8DAlKeCby4Jg5U="
+      },
+      {
+        "__type__": "QuantumCircuit",
+        "__value__": "eJzNVd1OgzAUPi0QWUyMd+7SPcCeQSMkczFeoJgQ75qGLSS4SR2+3vYaPoKPYHYjKy2ySmElmuwkJOXw/XFyAsH08W4aOnCBoCyUwVkCbnGyxLUru7iwOJ9O2PI9Zpc0YTRPVqILizxNM8Q5qBDZL6mOaYmw0UtM3nSg6h7NZQbxzHlVOBAA+okry66pocAsod7c3jSYz1rNz4PrwWgb+uOhobmrmv/igJ+Q+XJBUnDbM1gSePXRIwpwbVvRr9eT9/A8IauYK2UyKp5J+nDsh9vRYFM1JLG7wU94L43eu9H2a90simqv2iaq6n2ua1K6iciBKxMBRzzXGd9WrodD0eFQ6IRGPaDdAaIer4XhRLQahrzbBsvzooat+8sZH880ugP02QdcA+lWOVDnaxDlv1IbZz5CQst287ohjCUx09F0n6/74q+as3L6lHcMGIhyjAEDU54KvgHpI4VB"
+      },
+      {
+        "__type__": "QuantumCircuit",
+        "__value__": "eJzdVd1OgzAUPi0QWWKMd+7SPcCeQSMkczFeoJgQ70jDFhLcpA5fb3sNH8FHMLuRlRa7SmElmhhPQlIO3x+HAsH0/mYaOnCGoCqUw0kKbrmy+LEruzwwXx9P6PI1oeckpaRIV7wLiyLLcsQ4qBTZL6GOSYWw0VMSv+hA9Tmaiwz8mvOscCAA9BVXlC2pocAsod7c3jSYz1rNT4PLwWgb+uOhobmrmn/jgJ/G8+UizsBtz2AJ4MVbjyjAtG1FX64H7+5xEq8SppSLqHgm6MOxH25Hg03dEMTuBlvhvTR670bbj3WzKJJutU1U1XtfS1K6iYiBKxMBh1/XGV/XrodD0eFQ6IRGPaDdAaIet4XhiLcahrzbDZbnRQ277idn/Hem0R2gz37AEki3lQN1vgZRfiu1ceb/QGh5HVhdxZSmCdXRdN+72/I3XNDqcRHWMWAgwjAGDExYKvgE9mmG7Q=="
+      },
+      {
+        "__value__": "eJzlVd1OgzAUPi0Q2YXGO3fpHmDPoBGSuRgvUEyId6RhCwluUoevt72Gj+AjmN3ISotdpbASTUw8CUk5fH8cCgTT+5tp6MAZgqpQDicpuOXK4seu7PLAfH08ocvXhJ6TlJIiXfEuLIosyxHjoFJkv4Q6JhXCRk9J/KID1edoLjLwa86zwoEA0FdcUbakhgKzhHpze9NgPms1Pw0uB6Nt6I+Hhuauav6NA34az5eLOAO3PYMlgBdvPaIA07YVfbkevLvHSbxKmFIuouKZoA/HfrgdDTZ1QxC7G2yF99LovRttP9bNoki61TZRVe99LUnpJiIGrkwEHH5dZ3xdux4ORYdDoRMa9YB2B4h63BaGI95qGPJuN1ieFzXsup+c8d+ZRneAPvsBSyDdVg7U+RpE+a3Uxpn/JaHl/WF1FVOaJlRH030gb8v/dkGr50tYx4CBCMMYMDBhqeATVduImQ==",
+        "__type__": "QuantumCircuit"
+      },
+      {
+        "__value__": "eJztVU1Og0AUfjNApJvGnV3aA/QMNkJSG+MCxYS4IxPakGArY/F67TU8gkcw3UiHGaQjAwypiQtfQjI8vj9eHq03f7id+xZcICgKpTCMwc5PBr8OZeYX5ufhjK7fInpJYkqyeMO7sMqSJEWMg3KR4xLqmBQIEz1H4asKVN6jpcjAn1kvEgc8QN9xRZkVNeTpJVSbm7sa80Wj+bk3HYz3vjsZaZrbsvkPDrhxuFyvwgTs5gyGAF6994gCTNuU9Kv16Nw/zcJNxJRSERUvBH00cf39eLArG4LY3mAnfJRG7V1r+7mtF0WVV20SlfU+thUp1UTEwKWJgMWfq4xvStfuUNQdCq3QoAe0PUDQ47UwnPFWzZAP22A4TlCzdaec8d+ZRnuAPvuAKyDVKnvyfDWi/FZq7cz/hC6Ehg+O1XVIaRxRFU31i3qX/9FntFgIwjoaDEQYRoOBCUsFXwdqikU=",
+        "__type__": "QuantumCircuit"
+      }
+    ],
+    "parameters": [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    "run_options": {
+      "shots": 1000,
+      "init_qubits": true,
+      "noise_model": null,
+      "seed_simulator": null
+    },
+    "circuit_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "parameter_values": [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    "resilience_settings": {
+      "level": 1,
+      "extrapolator": "LinearExtrapolator",
+      "noise_factors": [
+        1,
+        3,
+        5
+      ],
+      "noise_amplifier": "TwoQubitAmplifier"
+    },
+    "transpilation_settings": {
+      "optimization_settings": {
+        "level": 3
+      },
+      "basis_gates": null,
+      "coupling_map": null,
+      "layout_method": null,
+      "initial_layout": null,
+      "routing_method": null,
+      "skip_transpilation": false,
+      "approximation_degree": null
+    }
+  },
+  "program": {
+    "id": "sampler"
+  },
+  "created": "2023-02-28T06:34:04.247007Z",
+  "tags": [
+    "seminar-result"
+  ],
+  "session_id": "cfuq0n7b5be8coe26so0",
+  "cost": 3600,
+  "status": "Completed"
+}
