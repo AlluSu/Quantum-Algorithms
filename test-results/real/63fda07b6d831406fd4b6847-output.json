@@ -1,0 +1,714 @@
+{
+    "backend_name": "ibm_oslo",
+    "backend_version": "1.0.21",
+    "qobj_id": "51176a80-363f-44a0-88e4-b2433800fe23",
+    "job_id": "63fda07b6d831406fd4b6847",
+    "date": "2023-02-28T18:25:17Z",
+    "success": true,
+    "status": "Successful completion",
+    "execution_id": "3b83f2a8-b795-11ed-8dd6-b02628f83db0",
+    "time_taken": 7.629521608352661,
+    "header": {
+        "backend_name": "ibm_oslo",
+        "backend_version": "1.0.21"
+    },
+    "results": [
+        {
+            "shots": 1000,
+            "success": true,
+            "status": "done",
+            "seed": null,
+            "meas_level": 2,
+            "meas_return": null,
+            "header": {
+                "qubit_labels": [
+                    [
+                        "q",
+                        0
+                    ],
+                    [
+                        "q",
+                        1
+                    ],
+                    [
+                        "q",
+                        2
+                    ],
+                    [
+                        "q",
+                        3
+                    ],
+                    [
+                        "q",
+                        4
+                    ],
+                    [
+                        "q",
+                        5
+                    ],
+                    [
+                        "q",
+                        6
+                    ]
+                ],
+                "n_qubits": 7,
+                "qreg_sizes": [
+                    [
+                        "q",
+                        7
+                    ]
+                ],
+                "clbit_labels": [
+                    [
+                        "meas",
+                        0
+                    ],
+                    [
+                        "meas",
+                        1
+                    ],
+                    [
+                        "meas",
+                        2
+                    ]
+                ],
+                "memory_slots": 3,
+                "creg_sizes": [
+                    [
+                        "meas",
+                        3
+                    ]
+                ],
+                "name": "Grover circuit",
+                "global_phase": 2.356194490192345,
+                "metadata": {}
+            },
+            "data": {
+                "counts": {
+                    "0x0": 136,
+                    "0x1": 135,
+                    "0x2": 131,
+                    "0x3": 127,
+                    "0x4": 124,
+                    "0x5": 114,
+                    "0x6": 111,
+                    "0x7": 122
+                },
+                "snapshots": null,
+                "memory": null,
+                "statevector": null,
+                "unitary": null
+            }
+        },
+        {
+            "shots": 1000,
+            "success": true,
+            "status": "done",
+            "seed": null,
+            "meas_level": 2,
+            "meas_return": null,
+            "header": {
+                "qubit_labels": [
+                    [
+                        "q",
+                        0
+                    ],
+                    [
+                        "q",
+                        1
+                    ],
+                    [
+                        "q",
+                        2
+                    ],
+                    [
+                        "q",
+                        3
+                    ],
+                    [
+                        "q",
+                        4
+                    ],
+                    [
+                        "q",
+                        5
+                    ],
+                    [
+                        "q",
+                        6
+                    ]
+                ],
+                "n_qubits": 7,
+                "qreg_sizes": [
+                    [
+                        "q",
+                        7
+                    ]
+                ],
+                "clbit_labels": [
+                    [
+                        "meas",
+                        0
+                    ],
+                    [
+                        "meas",
+                        1
+                    ],
+                    [
+                        "meas",
+                        2
+                    ]
+                ],
+                "memory_slots": 3,
+                "creg_sizes": [
+                    [
+                        "meas",
+                        3
+                    ]
+                ],
+                "name": "Grover circuit",
+                "global_phase": 1.5707963267948966,
+                "metadata": {}
+            },
+            "data": {
+                "counts": {
+                    "0x0": 388,
+                    "0x1": 217,
+                    "0x2": 71,
+                    "0x3": 43,
+                    "0x4": 77,
+                    "0x5": 112,
+                    "0x6": 43,
+                    "0x7": 49
+                },
+                "snapshots": null,
+                "memory": null,
+                "statevector": null,
+                "unitary": null
+            }
+        },
+        {
+            "shots": 1000,
+            "success": true,
+            "status": "done",
+            "seed": null,
+            "meas_level": 2,
+            "meas_return": null,
+            "header": {
+                "qubit_labels": [
+                    [
+                        "q",
+                        0
+                    ],
+                    [
+                        "q",
+                        1
+                    ],
+                    [
+                        "q",
+                        2
+                    ],
+                    [
+                        "q",
+                        3
+                    ],
+                    [
+                        "q",
+                        4
+                    ],
+                    [
+                        "q",
+                        5
+                    ],
+                    [
+                        "q",
+                        6
+                    ]
+                ],
+                "n_qubits": 7,
+                "qreg_sizes": [
+                    [
+                        "q",
+                        7
+                    ]
+                ],
+                "clbit_labels": [
+                    [
+                        "meas",
+                        0
+                    ],
+                    [
+                        "meas",
+                        1
+                    ],
+                    [
+                        "meas",
+                        2
+                    ]
+                ],
+                "memory_slots": 3,
+                "creg_sizes": [
+                    [
+                        "meas",
+                        3
+                    ]
+                ],
+                "name": "Grover circuit",
+                "global_phase": 0.7853981633974456,
+                "metadata": {}
+            },
+            "data": {
+                "counts": {
+                    "0x0": 328,
+                    "0x1": 121,
+                    "0x2": 120,
+                    "0x3": 62,
+                    "0x4": 98,
+                    "0x5": 119,
+                    "0x6": 73,
+                    "0x7": 79
+                },
+                "snapshots": null,
+                "memory": null,
+                "statevector": null,
+                "unitary": null
+            }
+        },
+        {
+            "shots": 1000,
+            "success": true,
+            "status": "done",
+            "seed": null,
+            "meas_level": 2,
+            "meas_return": null,
+            "header": {
+                "qubit_labels": [
+                    [
+                        "q",
+                        0
+                    ],
+                    [
+                        "q",
+                        1
+                    ],
+                    [
+                        "q",
+                        2
+                    ],
+                    [
+                        "q",
+                        3
+                    ],
+                    [
+                        "q",
+                        4
+                    ],
+                    [
+                        "q",
+                        5
+                    ],
+                    [
+                        "q",
+                        6
+                    ]
+                ],
+                "n_qubits": 7,
+                "qreg_sizes": [
+                    [
+                        "q",
+                        7
+                    ]
+                ],
+                "clbit_labels": [
+                    [
+                        "meas",
+                        0
+                    ],
+                    [
+                        "meas",
+                        1
+                    ],
+                    [
+                        "meas",
+                        2
+                    ]
+                ],
+                "memory_slots": 3,
+                "creg_sizes": [
+                    [
+                        "meas",
+                        3
+                    ]
+                ],
+                "name": "Grover circuit",
+                "global_phase": 6.2831853071795845,
+                "metadata": {}
+            },
+            "data": {
+                "counts": {
+                    "0x0": 127,
+                    "0x1": 137,
+                    "0x2": 90,
+                    "0x3": 117,
+                    "0x4": 131,
+                    "0x5": 125,
+                    "0x6": 144,
+                    "0x7": 129
+                },
+                "snapshots": null,
+                "memory": null,
+                "statevector": null,
+                "unitary": null
+            }
+        },
+        {
+            "shots": 1000,
+            "success": true,
+            "status": "done",
+            "seed": null,
+            "meas_level": 2,
+            "meas_return": null,
+            "header": {
+                "qubit_labels": [
+                    [
+                        "q",
+                        0
+                    ],
+                    [
+                        "q",
+                        1
+                    ],
+                    [
+                        "q",
+                        2
+                    ],
+                    [
+                        "q",
+                        3
+                    ],
+                    [
+                        "q",
+                        4
+                    ],
+                    [
+                        "q",
+                        5
+                    ],
+                    [
+                        "q",
+                        6
+                    ]
+                ],
+                "n_qubits": 7,
+                "qreg_sizes": [
+                    [
+                        "q",
+                        7
+                    ]
+                ],
+                "clbit_labels": [
+                    [
+                        "meas",
+                        0
+                    ],
+                    [
+                        "meas",
+                        1
+                    ],
+                    [
+                        "meas",
+                        2
+                    ]
+                ],
+                "memory_slots": 3,
+                "creg_sizes": [
+                    [
+                        "meas",
+                        3
+                    ]
+                ],
+                "name": "Grover circuit",
+                "global_phase": 5.497787143782139,
+                "metadata": {}
+            },
+            "data": {
+                "counts": {
+                    "0x0": 124,
+                    "0x1": 127,
+                    "0x2": 164,
+                    "0x3": 109,
+                    "0x4": 93,
+                    "0x5": 93,
+                    "0x6": 174,
+                    "0x7": 116
+                },
+                "snapshots": null,
+                "memory": null,
+                "statevector": null,
+                "unitary": null
+            }
+        },
+        {
+            "shots": 1000,
+            "success": true,
+            "status": "done",
+            "seed": null,
+            "meas_level": 2,
+            "meas_return": null,
+            "header": {
+                "qubit_labels": [
+                    [
+                        "q",
+                        0
+                    ],
+                    [
+                        "q",
+                        1
+                    ],
+                    [
+                        "q",
+                        2
+                    ],
+                    [
+                        "q",
+                        3
+                    ],
+                    [
+                        "q",
+                        4
+                    ],
+                    [
+                        "q",
+                        5
+                    ],
+                    [
+                        "q",
+                        6
+                    ]
+                ],
+                "n_qubits": 7,
+                "qreg_sizes": [
+                    [
+                        "q",
+                        7
+                    ]
+                ],
+                "clbit_labels": [
+                    [
+                        "meas",
+                        0
+                    ],
+                    [
+                        "meas",
+                        1
+                    ],
+                    [
+                        "meas",
+                        2
+                    ]
+                ],
+                "memory_slots": 3,
+                "creg_sizes": [
+                    [
+                        "meas",
+                        3
+                    ]
+                ],
+                "name": "Grover circuit",
+                "global_phase": 4.712388980384684,
+                "metadata": {}
+            },
+            "data": {
+                "counts": {
+                    "0x0": 132,
+                    "0x1": 180,
+                    "0x2": 84,
+                    "0x3": 147,
+                    "0x4": 123,
+                    "0x5": 142,
+                    "0x6": 98,
+                    "0x7": 94
+                },
+                "snapshots": null,
+                "memory": null,
+                "statevector": null,
+                "unitary": null
+            }
+        },
+        {
+            "shots": 1000,
+            "success": true,
+            "status": "done",
+            "seed": null,
+            "meas_level": 2,
+            "meas_return": null,
+            "header": {
+                "qubit_labels": [
+                    [
+                        "q",
+                        0
+                    ],
+                    [
+                        "q",
+                        1
+                    ],
+                    [
+                        "q",
+                        2
+                    ],
+                    [
+                        "q",
+                        3
+                    ],
+                    [
+                        "q",
+                        4
+                    ],
+                    [
+                        "q",
+                        5
+                    ],
+                    [
+                        "q",
+                        6
+                    ]
+                ],
+                "n_qubits": 7,
+                "qreg_sizes": [
+                    [
+                        "q",
+                        7
+                    ]
+                ],
+                "clbit_labels": [
+                    [
+                        "meas",
+                        0
+                    ],
+                    [
+                        "meas",
+                        1
+                    ],
+                    [
+                        "meas",
+                        2
+                    ]
+                ],
+                "memory_slots": 3,
+                "creg_sizes": [
+                    [
+                        "meas",
+                        3
+                    ]
+                ],
+                "name": "Grover circuit",
+                "global_phase": 3.9269908169872423,
+                "metadata": {}
+            },
+            "data": {
+                "counts": {
+                    "0x0": 147,
+                    "0x1": 128,
+                    "0x2": 120,
+                    "0x3": 111,
+                    "0x4": 109,
+                    "0x5": 165,
+                    "0x6": 101,
+                    "0x7": 119
+                },
+                "snapshots": null,
+                "memory": null,
+                "statevector": null,
+                "unitary": null
+            }
+        },
+        {
+            "shots": 1000,
+            "success": true,
+            "status": "done",
+            "seed": null,
+            "meas_level": 2,
+            "meas_return": null,
+            "header": {
+                "qubit_labels": [
+                    [
+                        "q",
+                        0
+                    ],
+                    [
+                        "q",
+                        1
+                    ],
+                    [
+                        "q",
+                        2
+                    ],
+                    [
+                        "q",
+                        3
+                    ],
+                    [
+                        "q",
+                        4
+                    ],
+                    [
+                        "q",
+                        5
+                    ],
+                    [
+                        "q",
+                        6
+                    ]
+                ],
+                "n_qubits": 7,
+                "qreg_sizes": [
+                    [
+                        "q",
+                        7
+                    ]
+                ],
+                "clbit_labels": [
+                    [
+                        "meas",
+                        0
+                    ],
+                    [
+                        "meas",
+                        1
+                    ],
+                    [
+                        "meas",
+                        2
+                    ]
+                ],
+                "memory_slots": 3,
+                "creg_sizes": [
+                    [
+                        "meas",
+                        3
+                    ]
+                ],
+                "name": "Grover circuit",
+                "global_phase": 3.1415926535897913,
+                "metadata": {}
+            },
+            "data": {
+                "counts": {
+                    "0x0": 136,
+                    "0x1": 100,
+                    "0x2": 134,
+                    "0x3": 107,
+                    "0x4": 138,
+                    "0x5": 108,
+                    "0x6": 173,
+                    "0x7": 104
+                },
+                "snapshots": null,
+                "memory": null,
+                "statevector": null,
+                "unitary": null
+            }
+        }
+    ],
+    "error": null
+}
