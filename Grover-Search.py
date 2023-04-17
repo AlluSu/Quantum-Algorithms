@@ -4,8 +4,9 @@ Demonstrating Grover's search algorithm.
 Scenario: We have a phone book containing names and numbers. Because the phone book is sorted alphabetically by names,
 it is easy to find a persons phone number by persons name. However, a more difficult task would be if we want to find a person by a phone number.
 Number-wise, if we have a million (1 000 000) entries in a phone book, we would on average have to look up half of it to find the correct entry (500 000 lookups).
+Worst case complexity is 1 000 000 queries.
 Grover's algorithm provides a quadratical speed-up to unstructured search probelms. Applying Grover's algorithm to this problem would reduce the needed amount
-of lookups to only 1000.
+of lookups to only 1000, in the worst case.
 
 This program simulates the above scenario on a smaller scale.
 '''
@@ -22,8 +23,10 @@ from qiskit_ibm_runtime import QiskitRuntimeService, Sampler, Session
 from qiskit.tools.visualization import plot_histogram
 from qiskit.tools.monitor import job_monitor
 
+# Loads the API key used to connect to the cloud
 load_dotenv()
 
+# Global variables for easier maintenace of code
 TOKEN = getenv('IBM_QUANTUM_TOKEN')
 USED_BACKEND = 'ibm_oslo'
 FILE_TO_WRITE_NAME ='History.txt'
@@ -48,7 +51,7 @@ def connect_to_cloud(token, backend):
 
 # Writing the randomized entry to see if the results are correct by the quantum computer.
 # Results can be obtained from the IBM cloud with the job_id.
-# TODO: Use a real database instead of a .txt-file.
+# TODO: Use a real (cloud) database instead of a .txt-file.
 def write_to_history(randomized_entry, job_id):
     results_history = open(FILE_TO_WRITE_NAME, "a")
     results_history.write("\n" + str(randomized_entry) + " " + str(job_id) + "\n")
@@ -72,7 +75,7 @@ def run_grover_in_simulator(grover_circuits):
         print(f"The optimal amount of Grover iterations is: {optimal_amount} with {qubits}  qubits")
         return result, job
 
-# Run the Grover search on a real quantum computer backend.S
+# Run the Grover search on a real quantum computer backend.
 def run_grover_in_quantum_computer(random_name_formatted, backend, grover_circuits):
     print(f"The value, which we are looking for is: {random_name_formatted}")
     mapped_circuit = transpile(grover_circuits, backend=backend)
@@ -118,8 +121,10 @@ def visualize_existing_qc_results():
 # The real program execution starts here.
 def run_grover():
     
-    #visualize_existing_simulator_results
-    visualize_existing_qc_results()
+    # Commented out, used during the writing of the seminar report to visualize results to use in the report
+    # TODO: Refactor to get results straight from the cloud with job id, or give path as parameter
+    # visualize_existing_simulator_results()
+    # visualize_existing_qc_results()
 
     # STEP 1: Construct and define the unstructured search problem.
     random_name = random.randint(0,7) # This simulates a random person from a phone book containing 8 entries [0,..,7]. As 8 = 2³, we need 3 qubits.
@@ -130,7 +135,7 @@ def run_grover():
     # STEP 2: Constructing the adequate quantum circuit for the problem
     grover_circuits = []
 
-    # Grover's algorithm's accuracy to find the right solution increases with the amount of iterations (in theory).
+    # Grover's algorithm's accuracy to find the right solution increases with the amount of iterations ip to a certain point (in theory).
     values = [0, 1, 2, 3, 4, 5, 6, 7]
     for value in range(0, len(values)):
         grover = Grover(iterations=values[value]) # using Grover's algorithm straight from the Qiskit library
@@ -139,13 +144,14 @@ def run_grover():
         grover_circuits.append(quantum_circuit)
 
     # Commented for now so the program does not freeze
+    # Used for printing the quantum circuits if interested to see them
     # print_quantum_circuits(grover_circuits)
 
     # STEP 3: Submit the circuits to IBM Quantum Computer or run with a simulator
     # NOTE: Occasionally the simulator is significantly faster than the real computer due to queue
     try:
         user_option = int(input(
-            "Press \n 1 for simulator \n 2 for real hardware \n 3 for retrieving an existing job by job_id \n 4 for both simulator and real hardware \n "
+            "Press \n 1 for simulator \n 2 for real hardware \n 3 for retrieving an existing job by job_id \n 4 for both simulator and real hardware \n"
             ))
     except ValueError:
         raise ValueError('Please give an integer')    
@@ -171,8 +177,6 @@ def run_grover():
 
         # Write the randomized entry and job id of the run to a file
         write_to_history(random_name_formatted, result.job_id())
-
-        # TODO: ANALYSIS OF THE RESULTS FROM THE QUANTUM COMPUTER
     
     # Due to occasional queues (45 minutes to 4 hours) in the free-tier quantum computer, it is easier to investigate and experiment by using previous runs, which can be obtained with the job id.
     elif user_option == 3:
@@ -182,10 +186,6 @@ def run_grover():
         print(f"as a dict: {result.result().to_dict()}")
         all_results_as_dict = result.result().to_dict()
         print(all_results_as_dict)
-
-        # TODO: Analysis and visualization of the results
-        # hist = plot_histogram(data = all_results_data)
-        # plt.show()
 
     # This runs the job on a simulator and on the real hardware for the same randomized value.
     # Decided to create this due to better and transparent comparison for the different systems.
